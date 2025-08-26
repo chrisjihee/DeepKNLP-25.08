@@ -27,8 +27,8 @@ Transformer-based Korean Natural Language Processing
     - Finetuned by KorQuAD: https://huggingface.co/models?pipeline_tag=question-answering&sort=downloads&search=korquad
 * Encoder-Decoder: https://huggingface.co/docs/transformers/main/en/model_summary#nlp-encoder-decoder
     - KoT5: https://huggingface.co/wisenut-nlp-team/KoT5-base | https://github.com/wisenut-research/KoT5
-    - KE-T5: https://huggingface.co/KETI-AIR/ke-t5-large | https://github.com/airc-keti/ke-t5
-    - pko-T5: https://huggingface.co/paust/pko-t5-large | https://github.com/paust-team/pko-t5
+    - KE-T5: https://huggingface.co/KETI-AIR/ke-t5-base | https://github.com/airc-keti/ke-t5
+    - pko-T5: https://huggingface.co/paust/pko-t5-base | https://github.com/paust-team/pko-t5
     - Finetuned by KorQuAD: https://huggingface.co/models?pipeline_tag=text2text-generation&sort=downloads&search=korquad
 * Decoder: https://huggingface.co/docs/transformers/main/en/model_summary#nlp-decoder
     - KoGPT2(125M): https://huggingface.co/skt/kogpt2-base-v2 | https://github.com/SKT-AI/KoGPT2
@@ -46,28 +46,37 @@ Transformer-based Korean Natural Language Processing
     ```bash
     rm -rf DeepKNLP*; git clone https://github.com/chrisjihee/DeepKNLP-25.08.git; cd DeepKNLP*;
     ```
-3. Create a new environment
+3. Monitor Nvidia GPU
+    ```bash
+    watch -d -n 3 nvidia-smi
+    ```
+4. Create a new environment
     ```bash
     conda search conda -c conda-forge | grep " 25."
     conda install -n base -c conda-forge conda=25.7.0 -y
     conda create -n DeepKNLP-25 python=3.12 -y
     conda install -n DeepKNLP-25 -c nvidia cuda=12.8 -y
     ```
-    conda install -n DeepKNLP-25 nvidia/label/cuda-12.8.1::cuda -y
-4. Install the required packages
+5. Install the required packages
     ```bash
     conda activate DeepKNLP-25  # MUST be activated
     pip list; echo ==========; conda --version; echo ==========; conda list
     pip install -e . --extra-index-url https://download.pytorch.org/whl/cu128
     rm -rf transformers; git clone https://github.com/chrisjihee/transformers.git; pip install -U -e transformers
     rm -rf ratsnlp;      git clone https://github.com/chrisjihee/ratsnlp.git;      pip install -U -e ratsnlp
-    pip list | grep -E "torch|lightn|trans|accel|speed|flash|numpy|piece|chris|prog|pydantic"
+    pip list | grep -E "torch|lightn|trans|accel|speed|flash|numpy|piece|chris|rats|prog|pydantic"
     ```
-5. Login to Hugging Face and link the cache
+6. Login to Hugging Face and link the cache
     ```bash
     hf auth whoami
     hf auth login
     rm -f .cache_hf; ln -s ~/.cache/huggingface ./.cache_hf
+    ```
+7. Logout from Hugging Face
+    ```bash
+    hf auth logout
+    rm -f ~/.huggingface/token
+    rm -f ~/.cache/huggingface/token
     ```
 
 ## Target Tasks
@@ -82,26 +91,29 @@ Transformer-based Korean Natural Language Processing
     - `python task2-ner/run_ner.py train`
     - `python task2-ner/run_ner.py test`
     - `python task2-ner/run_ner.py serve`
-* Question Answering: https://ratsgo.github.io/nlpbook/docs/qa
-    - `bash task3-qa/train_qa-1.sh`
-    - `bash task3-qa/train_qa-2.sh`
-    - `bash task3-qa/train_qa-3.sh`
-    - `bash task3-qa/train_qa_seq2seq-1.sh`
-    - `bash task3-qa/train_qa_seq2seq-2.sh`
-    - `bash task3-qa/train_qa_seq2seq-3.sh`
-    - `bash task3-qa/eval_qa-1.sh`
-    - `bash task3-qa/eval_qa-2.sh`
-    - `bash task3-qa/eval_qa-3.sh`
-    - `bash task3-qa/eval_qa_seq2seq-1.sh`
-    - `bash task3-qa/eval_qa_seq2seq-2.sh`
-    - `bash task3-qa/eval_qa_seq2seq-3.sh`
 * Sentence Generation: https://ratsgo.github.io/nlpbook/docs/generation
-    - `CUDA_VISIBLE_DEVICES=0 python task4-gen/infer_gen-1.py`
-    - `CUDA_VISIBLE_DEVICES=1 python task4-gen/infer_gen-2.py`
-    - `CUDA_VISIBLE_DEVICES=2 python task4-gen/infer_gen-3.py`
-    - `CUDA_VISIBLE_DEVICES=0 python task4-gen/train_gen-1.py`
-    - `CUDA_VISIBLE_DEVICES=1 python task4-gen/train_gen-2.py`
-    - `CUDA_VISIBLE_DEVICES=2 python task4-gen/train_gen-3.py`
-    - `CUDA_VISIBLE_DEVICES=0 python task4-gen/serve_gen-1.py`
-    - `CUDA_VISIBLE_DEVICES=1 python task4-gen/serve_gen-2.py`
-    - `CUDA_VISIBLE_DEVICES=2 python task4-gen/serve_gen-3.py`
+    - `CUDA_VISIBLE_DEVICES=7 python task3-gen/infer_gen-1.py`
+    - `CUDA_VISIBLE_DEVICES=6 python task3-gen/infer_gen-2.py`
+    - `CUDA_VISIBLE_DEVICES=5 python task3-gen/infer_gen-3.py`
+    - `CUDA_VISIBLE_DEVICES=7 python task3-gen/train_gen-1.py`
+    - `CUDA_VISIBLE_DEVICES=6 python task3-gen/train_gen-2.py`
+    - `CUDA_VISIBLE_DEVICES=5 python task3-gen/train_gen-3.py`
+    - `CUDA_VISIBLE_DEVICES=7 python task3-gen/serve_gen-1.py`
+    - `CUDA_VISIBLE_DEVICES=6 python task3-gen/serve_gen-2.py`
+    - `CUDA_VISIBLE_DEVICES=5 python task3-gen/serve_gen-3.py`
+* Question Answering: https://ratsgo.github.io/nlpbook/docs/qa
+    - `bash task4-qa/train_qa-1.sh`
+    - `bash task4-qa/train_qa-2.sh`
+    - `bash task4-qa/train_qa-3.sh`
+    - `bash task4-qa/eval_qa-1.sh`
+    - `bash task4-qa/eval_qa-2.sh`
+    - `bash task4-qa/eval_qa-3.sh`
+    - `python task4-qa/infer_qa.py`
+    - `python task4-qa/serve_qa.py`
+* Question Answering (seq2seq):
+    - `bash task4-qa/train_qa_seq2seq-1.sh`
+    - `bash task4-qa/train_qa_seq2seq-2.sh`
+    - `bash task4-qa/eval_qa_seq2seq-1.sh`
+    - `bash task4-qa/eval_qa_seq2seq-2.sh`
+    - `python task4-qa/infer_qa_seq2seq.py`
+    - `python task4-qa/serve_qa_seq2seq.py`
