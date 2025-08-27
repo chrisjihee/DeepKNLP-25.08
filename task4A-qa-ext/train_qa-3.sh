@@ -1,5 +1,5 @@
 OUTPUT_DIR=output/korquad/train_qa-by-koelectra
-CUDA_VISIBLE_DEVICES=5 python task4A-qa-ext/trainer_qa.py \
+CUDA_VISIBLE_DEVICES=5 python task4A-qa-ext/train_qa.py \
   --train_file data/korquad/train-half.jsonl \
   --validation_file data/korquad/validation.jsonl \
   --model_name_or_path monologg/koelectra-base-v3-discriminator \
