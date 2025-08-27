@@ -108,7 +108,7 @@ Step 2 TODO 해답:
     context_index = 1
 
 16. 학습용 전처리 함수 실행:
-    train_features = prepare_train_features(dataset)
+    train_features = prepare_train_features(dataset[:])
 
 17. 토큰들을 텍스트로 디코딩:
     tokens = tokenizer.convert_ids_to_tokens(train_features['input_ids'][i])
@@ -118,7 +118,7 @@ Step 2 TODO 해답:
     predicted_answer = tokenizer.decode(train_features['input_ids'][i][start_pos:end_pos+1])
 
 19. 추론용 전처리 함수 실행:
-    val_features = prepare_validation_features(dataset)
+    val_features = prepare_validation_features(dataset[:])
 
 핵심 개념:
 
